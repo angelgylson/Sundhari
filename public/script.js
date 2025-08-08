@@ -11,15 +11,7 @@ const turnIndicator = document.getElementById('turn-indicator');
 const doneBtn = document.getElementById('done-placements');
 const scoreboard = document.getElementById('scoreboard');
 const rankList = document.getElementById('rank-list');
-const proceedWebcamBtn = document.getElementById('proceed-webcam');
-const webcamModal = document.getElementById('webcam-modal');
-const videoEl = document.getElementById('video');
-const videoOverlay = document.getElementById('video-overlay');
-const snapBtn = document.getElementById('snap-btn');
-const closeWebcamBtn = document.getElementById('close-webcam');
-const downloadLink = document.getElementById('download-link');
 const portraitImage = document.getElementById('celebrity');
-
 
 // Game State
 let playerCount = 1;
@@ -66,7 +58,7 @@ function showCountdown(start = 3, cb) {
   }, 800);
 }
 
-// //Random Spin
+// Spin then hide image, show emoji bar
 function startSpinAndHide(durationMs = 3000) {
   const spins = [360, -360, 720, -720];
   const randomSpin = spins[Math.floor(Math.random() * spins.length)];
@@ -76,97 +68,20 @@ function startSpinAndHide(durationMs = 3000) {
   setTimeout(() => {
     celebrityImg.style.transform = `rotate(${randomSpin}deg)`;
   });
-  
+
   setTimeout(() => {
     celebrityImg.style.opacity = '0';
     setTimeout(() => {
       celebrityImg.style.display = 'none';
-      document.getElementById('bottom-bar').style.display = 'flex';
+      document.getElementById('bottom-bar').style.display = 'flex'; // show emojis now
     }, 500);
   }, durationMs);
 }
 
-//  const portrait = document.getElementById('portrait');
-//  let angle = 0;
-//  let x = 100, y = 100;
-//  let dx = 2, dy = 2;
-
-//  function animate() {
-//    // Rotate
-//    angle += 2;
-
-//    // Move
-//    x += dx;
-//    y += dy;
-
-//    // Bounce on edges
-//    if (x <= 0 || x + portrait.width >= window.innerWidth) dx *= -1;
-//    if (y <= 0 || y + portrait.height >= window.innerHeight) dy *= -1;
-
-//    // Apply transform
-//    portrait.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
-
-// //   requestAnimationFrame(animate);
-//  }
-
-//  animate();
-
-// function startSpinAndHide(durationMs = 3000) {
-//   let startTime = Date.now();
-//   let speed = 30; // rotation speed multiplier
-//   let x = window.innerWidth / 2;
-//   let y = window.innerHeight / 2;
-//   let vx = (Math.random() * 10) + 8; // horizontal velocity
-//   let vy = (Math.random() * 10) + 8; // vertical velocity
-//   let angle = 0;
-
-//   celebrityImg.style.display = 'block';
-//   celebrityImg.style.opacity = '1';
-//   celebrityImg.style.position = 'fixed'; // move freely
-//   celebrityImg.style.left = `${x}px`;
-//   celebrityImg.style.top = `${y}px`;
-//   celebrityImg.style.transition = 'none';
-
-//   function animate() {
-//     let elapsed = Date.now() - startTime;
-//     if (elapsed > durationMs) {
-//       celebrityImg.style.opacity = '0';
-//       setTimeout(() => {
-//         celebrityImg.style.display = 'none';
-//         document.getElementById('bottom-bar').style.display = 'flex';
-//       }, 500);
-//       return;
-//     }
-
-//     // Update position
-//     x += vx;
-//     y += vy;
-
-//     // Bounce from walls
-//     if (x <= 0 || x + celebrityImg.width >= window.innerWidth) {
-//       vx = -vx;
-//     }
-//     if (y <= 0 || y + celebrityImg.height >= window.innerHeight) {
-//       vy = -vy;
-//     }
-
-//     // Update angle
-//     angle += speed;
-
-//     // Apply transform
-//     celebrityImg.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
-
-//     requestAnimationFrame(animate);
-//   }
-
-//   animate();
-
-
-
 // Click Anywhere Placement
 function enableClickPlacement() {
   document.addEventListener('click', (ev) => {
-    if (slider.contains(ev.target)) return; // ignore emoji bar clicks
+    if (slider.contains(ev.target)) return; 
     if (!selectedEmoji) return;
 
     registerPlacementForCurrentPlayer({
@@ -175,6 +90,7 @@ function enableClickPlacement() {
       x: ev.clientX,
       y: ev.clientY
     });
+
     selectedEmoji = null;
     document.querySelectorAll('.emoji-item').forEach(el => el.classList.remove('selected'));
   });
@@ -194,14 +110,19 @@ function placeEmojiVisual(emoji, x, y, playerName) {
 
 // Register placement
 function registerPlacementForCurrentPlayer({ playerNum, emoji, x, y }) {
+  console.log(`Registering placement for Player ${playerNum}:`, emoji, x, y);
+
   if (placements.some(p => p.playerNum === playerNum)) {
     alert(`Player ${playerNum} already placed.`);
     return;
   }
+
   const playerName = `Player ${playerNum}`;
   placeEmojiVisual(emoji, x, y, playerName);
   placements.push({ playerNum, player: playerName, emoji, x, y });
+
   currentPlayer += 1;
+
   if (currentPlayer > playerCount) {
     turnIndicator.textContent = `All done`;
     doneBtn.classList.remove('hidden');
@@ -217,10 +138,13 @@ function registerPlacementForCurrentPlayer({ playerNum, emoji, x, y }) {
 
 // Scoreboard
 async function computeAndShowScoreboard() {
+  console.log("Placements being sent to server:", placements);
+
   const imgRect = celebrityImg.getBoundingClientRect();
   const imageWidth = imgRect.width;
   const imageHeight = imgRect.height;
   let serverData = null;
+
   try {
     const resp = await fetch('/compute_score', {
       method: 'POST',
@@ -231,41 +155,39 @@ async function computeAndShowScoreboard() {
       })
     });
     serverData = await resp.json();
-  } catch {}
+    console.log("Server returned scoreboard data:", serverData);
+  } catch (err) {
+    console.error("Error fetching scoreboard:", err);
+  }
+
   rankList.innerHTML = '';
   (serverData?.ranked || []).forEach(row => {
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${row.player}</td><td>${row.emoji} (${row.tokenCount})</td><td>${row.distance.toFixed(1)}</td>`;
     rankList.appendChild(tr);
   });
+
   scoreboard.classList.remove('hidden');
   confetti({ particleCount: 150, spread: 60, origin: { y: 0.3 } });
 }
 
+// Start Game
 startBtn.addEventListener('click', () => {
-  // Read player count
   playerCount = parseInt(playerCountInput.value, 10) || 2;
   currentPlayer = 1;
   placements = [];
 
-  // Hide start screen, show game screen
   startScreen.classList.add('hidden');
   gameScreen.classList.remove('hidden');
-
-  // Update first player's turn text
   turnIndicator.textContent = `Player ${currentPlayer}'s Turn`;
-
-  // Make sure portrait is hidden during countdown
   portraitImage.style.display = "none";
+  document.getElementById('bottom-bar').style.display = 'none'; // hide emojis initially
 
-  // Start countdown
   showCountdown(3, () => {
-    // After countdown: show portrait and start game
     portraitImage.style.display = "block";
+    enableClickPlacement(); // clicks ready immediately
     startSpinAndHide(3000);
-    enableClickPlacement();
   });
 });
-
 
 buildSlider();
