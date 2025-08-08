@@ -17,6 +17,53 @@ body {
   color: #222;
 }
 
+
+#bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Keep on top */
+}
+
+#emoji-slider {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  max-width: 90%;
+  scrollbar-width: none; /* Firefox */
+}
+#emoji-slider::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.emoji-item {
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+.emoji-item:hover {
+  background: #eee;
+}
+.emoji-item.selected {
+  background: #ffd54f;
+}
+
+
+/* #portrait {
+  position: absolute;
+  width: 300px;
+  height: auto;
+  transition: transform 0.1s linear;
+} */
+
 .panel { text-align:center; padding: 20px; }
 
 .hidden { display: none !important; }
@@ -38,7 +85,8 @@ body {
 
 #center { flex:1; display:flex; justify-content:center; }
 #image-wrap { position:relative; display:inline-block; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.12); overflow:visible; background: #fff; padding:6px; }
-#celebrity { display:block; max-width:520px; width:100%; height:auto; cursor:crosshair; transition: opacity 0.6s ease; }
+#celebrity { display:block; max-width:520px; width:100%; height:auto; cursor:crosshair; transition: opacity 0.6s ease; } 
+
 
 .placed-emoji {
   position:absolute;

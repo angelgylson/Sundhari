@@ -18,7 +18,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 const encoder = encoding_for_model('gpt2');
 
 // Target position (normalized between eyebrows)
-const TARGET_NORM = { x: 0.5, y: 0.28 };
+const TARGET_NORM = { 
+  x: 258 / 512, // ≈ 0.5039
+  y: 298 / 512  // ≈ 0.5820
+};
+
 
 app.post('/compute_score', (req, res) => {
   try {

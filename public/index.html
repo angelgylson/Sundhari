@@ -5,22 +5,56 @@
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sundharikku Emoji Thoddu</title>
+  <title>Sundharikku Emojithodal</title>
+ <style>
+   .title-text {
+            font-family: "Snell Roundhand", cursive;
+            font-size: 60px;
+            font-weight: bold;
+            color: #B2D8B2;
+            margin-top: 20px; 
+            margin-bottom: 5px; 
+        }
+   .player-text {
+            font-family: "Bells MT", cursive;
+            font-size: 40px;
+            color: #B2D8B2; 
+            font-weight: 600;
+        }
+   button {
+            margin-top: 50px;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            border: none;
+            background-color: #B2D8B2;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color:#fff; }
+            
+  </style>
+
   <link rel="stylesheet" href="style.css">
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
+  <img src="flower.jpeg" alt="Flower Banner" id="flowerBanner"
+     style="width: 100%; height: 50 px; object-fit: cover; display: block;">
   <div id="app">
 
     <!-- Start Screen -->
     <div id="start-screen" class="panel">
-      <h1>Sundharikku Emoji Thoddal</h1>
-      <label>Number of players:
-        <input id="player-count" type="number" min="2" max="5" value="3"/>
+      <h1 class="title-text">Sundharikku Emojithoddal</h1>
+      <label class="player-text">Number of players:
+        <input id="player-count" type="number" min="2" max="5" value="2"/>
       </label>
-      <button id="start-btn">Start</button>
+      <button class="button" id="start-btn">Start</button>
     </div>
+
+<div id="bottom-bar">
+  <div id="emoji-slider"></div>
+</div>
 
     <!-- Countdown -->
     <div id="countdown-overlay" class="overlay hidden">
@@ -35,7 +69,7 @@
 
       <div id="center">
         <div id="image-wrap">
-          <img id="celebrity" src="./anushka.png" alt="Celebrity"/>
+          <img id="celebrity" src="./face.jpeg" alt="Celebrity"/>
         </div>
       </div>
 

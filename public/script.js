@@ -18,6 +18,8 @@ const videoOverlay = document.getElementById('video-overlay');
 const snapBtn = document.getElementById('snap-btn');
 const closeWebcamBtn = document.getElementById('close-webcam');
 const downloadLink = document.getElementById('download-link');
+const portraitImage = document.getElementById('celebrity');
+
 
 // Game State
 let playerCount = 1;
@@ -64,7 +66,7 @@ function showCountdown(start = 3, cb) {
   }, 800);
 }
 
-// Random Spin
+// //Random Spin
 function startSpinAndHide(durationMs = 3000) {
   const spins = [360, -360, 720, -720];
   const randomSpin = spins[Math.floor(Math.random() * spins.length)];
@@ -74,7 +76,7 @@ function startSpinAndHide(durationMs = 3000) {
   setTimeout(() => {
     celebrityImg.style.transform = `rotate(${randomSpin}deg)`;
   });
-
+  
   setTimeout(() => {
     celebrityImg.style.opacity = '0';
     setTimeout(() => {
@@ -83,6 +85,83 @@ function startSpinAndHide(durationMs = 3000) {
     }, 500);
   }, durationMs);
 }
+
+//  const portrait = document.getElementById('portrait');
+//  let angle = 0;
+//  let x = 100, y = 100;
+//  let dx = 2, dy = 2;
+
+//  function animate() {
+//    // Rotate
+//    angle += 2;
+
+//    // Move
+//    x += dx;
+//    y += dy;
+
+//    // Bounce on edges
+//    if (x <= 0 || x + portrait.width >= window.innerWidth) dx *= -1;
+//    if (y <= 0 || y + portrait.height >= window.innerHeight) dy *= -1;
+
+//    // Apply transform
+//    portrait.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
+
+// //   requestAnimationFrame(animate);
+//  }
+
+//  animate();
+
+// function startSpinAndHide(durationMs = 3000) {
+//   let startTime = Date.now();
+//   let speed = 30; // rotation speed multiplier
+//   let x = window.innerWidth / 2;
+//   let y = window.innerHeight / 2;
+//   let vx = (Math.random() * 10) + 8; // horizontal velocity
+//   let vy = (Math.random() * 10) + 8; // vertical velocity
+//   let angle = 0;
+
+//   celebrityImg.style.display = 'block';
+//   celebrityImg.style.opacity = '1';
+//   celebrityImg.style.position = 'fixed'; // move freely
+//   celebrityImg.style.left = `${x}px`;
+//   celebrityImg.style.top = `${y}px`;
+//   celebrityImg.style.transition = 'none';
+
+//   function animate() {
+//     let elapsed = Date.now() - startTime;
+//     if (elapsed > durationMs) {
+//       celebrityImg.style.opacity = '0';
+//       setTimeout(() => {
+//         celebrityImg.style.display = 'none';
+//         document.getElementById('bottom-bar').style.display = 'flex';
+//       }, 500);
+//       return;
+//     }
+
+//     // Update position
+//     x += vx;
+//     y += vy;
+
+//     // Bounce from walls
+//     if (x <= 0 || x + celebrityImg.width >= window.innerWidth) {
+//       vx = -vx;
+//     }
+//     if (y <= 0 || y + celebrityImg.height >= window.innerHeight) {
+//       vy = -vy;
+//     }
+
+//     // Update angle
+//     angle += speed;
+
+//     // Apply transform
+//     celebrityImg.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
+
+//     requestAnimationFrame(animate);
+//   }
+
+//   animate();
+
+
 
 // Click Anywhere Placement
 function enableClickPlacement() {
@@ -163,118 +242,30 @@ async function computeAndShowScoreboard() {
   confetti({ particleCount: 150, spread: 60, origin: { y: 0.3 } });
 }
 
-// Webcam
-let stream;
-let modelsLoaded = false;
-async function openWebcam() {
-  webcamModal.classList.remove('hidden');
-
-  if (!modelsLoaded) {
-    await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-    await faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models');
-    modelsLoaded = true;
-  }
-
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-    videoEl.srcObject = stream;
-    await videoEl.play();
-    videoOverlay.width = videoEl.videoWidth || videoEl.clientWidth;
-    videoOverlay.height = videoEl.videoHeight || videoEl.clientHeight;
-
-    async function drawOverlay() {
-      const ctx = videoOverlay.getContext('2d');
-      ctx.clearRect(0, 0, videoOverlay.width, videoOverlay.height);
-
-      const detections = await faceapi
-        .detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
-        .withFaceLandmarks(true);
-
-      if (detections && detections.landmarks) {
-        const leftBrow = detections.landmarks.getLeftEyeBrow();
-        const rightBrow = detections.landmarks.getRightEyeBrow();
-
-        const browCenterX = (leftBrow[2].x + rightBrow[2].x) / 2;
-        const browCenterY = (leftBrow[2].y + rightBrow[2].y) / 2;
-
-        const radius = Math.max(10, Math.round(videoOverlay.width * 0.04));
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(220,20,60,0.9)';
-        ctx.arc(browCenterX, browCenterY, radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      requestAnimationFrame(drawOverlay);
-    }
-    requestAnimationFrame(drawOverlay);
-  } catch (err) {
-    alert('Could not open webcam: ' + err.message);
-  }
-}
-
-function closeWebcam() {
-  webcamModal.classList.add('hidden');
-  if (stream) {
-    stream.getTracks().forEach(t => t.stop());
-    stream = null;
-  }
-}
-
-// Snapshot with landmark-based bindi position
-snapBtn.addEventListener('click', async () => {
-  const w = videoEl.videoWidth || videoEl.clientWidth;
-  const h = videoEl.videoHeight || videoEl.clientHeight;
-
-  const canvas = document.createElement('canvas');
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(videoEl, 0, 0, w, h);
-
-  const detections = await faceapi
-    .detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
-    .withFaceLandmarks(true);
-
-  if (detections && detections.landmarks) {
-    const leftBrow = detections.landmarks.getLeftEyeBrow();
-    const rightBrow = detections.landmarks.getRightEyeBrow();
-
-    const browCenterX = (leftBrow[2].x + rightBrow[2].x) / 2;
-    const browCenterY = (leftBrow[2].y + rightBrow[2].y) / 2;
-
-    const radius = Math.max(10, Math.round(w * 0.04));
-    ctx.beginPath();
-    ctx.fillStyle = 'rgba(220,20,60,0.95)';
-    ctx.arc(browCenterX, browCenterY, radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  downloadLink.href = canvas.toDataURL('image/png');
-  downloadLink.classList.remove('hidden');
-  downloadLink.click();
-});
-
-closeWebcamBtn.addEventListener('click', closeWebcam);
-proceedWebcamBtn.addEventListener('click', () => {
-  scoreboard.classList.add('hidden');
-  openWebcam();
-});
-doneBtn.addEventListener('click', computeAndShowScoreboard);
-
 startBtn.addEventListener('click', () => {
-  playerCount = Math.max(2, Math.min(5, parseInt(playerCountInput.value || '3', 10)));
+  // Read player count
+  playerCount = parseInt(playerCountInput.value, 10) || 2;
   currentPlayer = 1;
   placements = [];
+
+  // Hide start screen, show game screen
   startScreen.classList.add('hidden');
+  gameScreen.classList.remove('hidden');
+
+  // Update first player's turn text
+  turnIndicator.textContent = `Player ${currentPlayer}'s Turn`;
+
+  // Make sure portrait is hidden during countdown
+  portraitImage.style.display = "none";
+
+  // Start countdown
   showCountdown(3, () => {
-    gameScreen.classList.remove('hidden');
+    // After countdown: show portrait and start game
+    portraitImage.style.display = "block";
     startSpinAndHide(3000);
-    buildSlider();
     enableClickPlacement();
-    turnIndicator.textContent = `Player ${currentPlayer}'s Turn`;
-    document.getElementById('bottom-bar').style.display = 'none';
-    doneBtn.classList.add('hidden');
-    scoreboard.classList.add('hidden');
   });
 });
+
 
 buildSlider();
