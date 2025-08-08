@@ -1,0 +1,89 @@
+/* style.css - basic layout */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+:root {
+  --bg: #fffef8;
+  --panel: #fff;
+  --accent: #d9534f;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: #222;
+}
+
+.panel { text-align:center; padding: 20px; }
+
+.hidden { display: none !important; }
+
+#countdown-overlay {
+  position: fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.5); z-index: 50;
+}
+#countdown-number {
+  font-size: 6rem; color:white; font-weight:700;
+  animation: pop 0.8s ease;
+}
+@keyframes pop { 0% { transform: scale(.3) } 80% { transform: scale(1.05)} 100% { transform: scale(1) } }
+
+#game-screen { display:flex; gap:20px; padding:20px; align-items:flex-start; }
+
+#left-panel { width: 180px; }
+#turn-indicator { font-weight:700; margin-bottom:10px; }
+
+#center { flex:1; display:flex; justify-content:center; }
+#image-wrap { position:relative; display:inline-block; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.12); overflow:visible; background: #fff; padding:6px; }
+#celebrity { display:block; max-width:520px; width:100%; height:auto; cursor:crosshair; transition: opacity 0.6s ease; }
+
+.placed-emoji {
+  position:absolute;
+  transform: translate(-50%,-50%);
+  font-size: 2.2rem;
+  pointer-events: none; /* fixed after placement */
+  text-align:center;
+  z-index: 30;
+}
+.placed-label {
+  display:block;
+  font-size: 0.8rem;
+  color: #111;
+  margin-top: 4px;
+  background: rgba(255,255,255,0.9);
+  padding: 2px 6px;
+  border-radius: 6px;
+  display:inline-block;
+}
+
+#bottom-bar { position: fixed; left:0; right:0; bottom:0; background:rgba(255,255,255,0.95); padding:12px; display:flex; align-items:center; gap:12px; justify-content:center; box-shadow:0 -4px 10px rgba(0,0,0,0.08); }
+.slider { display:flex; gap:8px; overflow-x:auto; padding:6px; max-width:70%; }
+.slider .emoji-item { font-size:1.8rem; padding:8px 10px; background:white; border-radius:8px; cursor:pointer; border:1px solid #eee; user-select:none; display:flex; align-items:center; justify-content:center; min-width:48px; height:48px; }
+
+/* selected button look */
+.emoji-item.selected { box-shadow: 0 6px 18px rgba(0,0,0,0.12); transform: translateY(-2px); }
+
+#scoreboard { position: fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:60; }
+#scoreboard-inner { background:white; padding:20px; border-radius:10px; width:90%; max-width:640px; text-align:center; }
+#rank-list { text-align:left; margin-top:10px; max-height:300px; overflow:auto; }
+
+.bindi-button {
+  margin-top:12px;
+  width:120px; height:120px; border-radius:50%; background:var(--accent); color:white; border:none; font-weight:700; font-size:0.9rem;
+  display:inline-flex; align-items:center; justify-content:center;
+  cursor:pointer;
+}
+
+/* Webcam modal layout */
+#webcam-modal { position: fixed; inset:0; background: rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:70; }
+#webcam-inner { background:white; padding:12px; border-radius:8px; }
+#video { width:480px; max-width:90vw; height:auto; display:block; }
+#video-overlay { position: absolute; pointer-events:none; }
+
+/* scoreboard table */
+#score-table { width:100%; border-collapse: collapse; margin-top:8px; }
+#score-table th, #score-table td { padding:8px 10px; border-bottom: 1px solid #eee; text-align:left; }
+#score-table th { background:#fafafa; font-weight:700; }

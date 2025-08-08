@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sundharikku Emoji Thoddu</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div id="app">
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="panel">
+      <h1>Sundharikku Emoji Thoddal</h1>
+      <label>Number of players:
+        <input id="player-count" type="number" min="2" max="5" value="3"/>
+      </label>
+      <button id="start-btn">Start</button>
+    </div>
+
+    <!-- Countdown -->
+    <div id="countdown-overlay" class="overlay hidden">
+      <div id="countdown-number">3</div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="hidden">
+      <div id="left-panel">
+        <div id="turn-indicator">Player 1's Turn</div>
+      </div>
+
+      <div id="center">
+        <div id="image-wrap">
+          <img id="celebrity" src="./anushka.png" alt="Celebrity"/>
+        </div>
+      </div>
+
+      <div id="bottom-bar" style="display:none;">
+        <div id="emoji-slider" class="slider"></div>
+        <button id="done-placements" class="hidden">Finish (Reveal)</button>
+      </div>
+    </div>
+
+    <!-- Scoreboard -->
+    <div id="scoreboard" class="overlay hidden">
+      <div id="scoreboard-inner">
+        <h2>Scoreboard</h2>
+        <table id="score-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Emoji (tokens)</th>
+              <th>Distance (px)</th>
+            </tr>
+          </thead>
+          <tbody id="rank-list"></tbody>
+        </table>
+        <button id="proceed-webcam" class="bindi-button">പൊട്ടുതൊടൂ</button>
+      </div>
+    </div>
+
+    <!-- Webcam Modal -->
+    <div id="webcam-modal" class="overlay hidden">
+      <div id="webcam-inner">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="video-overlay"></canvas>
+        <div id="webcam-controls">
+          <button id="snap-btn">Take Snapshot</button>
+          <button id="close-webcam">Close</button>
+          <a id="download-link" download="snapshot.png" class="hidden">Download snapshot</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="script.js" defer></script>
+</body>
+</html>
