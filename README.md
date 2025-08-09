@@ -47,18 +47,22 @@ For Software:
 
 Installation
 
-# 1. Clone the repository
+ 1. Clone the repository
 git clone https://github.com/angelgylson/Sundhari.git
 
-# 2. Navigate into the project folder
+ 2. Navigate into the project folder
 cd Sundhari
 
-# 3. Install dependencies
+ 3. Install dependencies
 npm install
 
 
 Run
-[commands]
+1. npm run dev
+
+2. npm start
+
+3. http://localhost:3000
 
 Project Documentation
 For Software:
