@@ -65,14 +65,16 @@ Run
 3. http://localhost:3000
 
 Project Documentation
-For Software:
+For Software: 
+Frontend: HTML, CSS, JavaScript, Canvas Confetti
+
+Backend: Node.js, Express.js, CORS, @dqbd/tiktoken
+
+Hosting: Compatible with Render/Vercel/Heroku
 
 Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name) Add caption explaining what this shows
 
-![Screenshot2](Add screenshot 2 here with proper name) Add caption explaining what this shows
 
-![Screenshot3](Add screenshot 3 here with proper name) Add caption explaining what this shows
 
 Diagrams
 ![Workflow](Add your workflow/architecture diagram here) Add caption explaining your workflow
