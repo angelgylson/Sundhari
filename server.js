@@ -3,6 +3,12 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { encoding_for_model } from '@dqbd/tiktoken';
+// replace the existing PORT line:
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
 
 const app = express();
 app.use(cors());
