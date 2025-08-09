@@ -11,16 +11,20 @@ Team Members
 Team Lead: Angel Gylson - MITS
 Member 2: Parvana S Nair - MITS
 
-Project Description
+Project Description:
+
 Sundharikku Emojithodal is a wacky Onam-themed multiplayer browser game where players pick colorful emojis and place them exactly where they think the secret “bhindhi spot” is on a celebrity’s forehead. The twist? The image spins and vanishes before you click! Winners are crowned based on how close their emoji lands and how few “token points” their emoji costs — blending festival vibes, strategy, and pure chaos into one laugh-filled Onam showdown.
 
-The Problem (that doesn't exist)
+The Problem (that doesn't exist):
+
 Sundharikku Emojithodal hilariously “digitalizes” the art of Sundariki Pottu Thodal, bringing it into the modern Onam season with spinning celebrity heads and cheeky emoji bhindhis. Using token counts and a sprinkle of AI-style scoring logic, it scientifically determines who places the most accurate (and cost-efficient) pottu, solving a problem nobody knew existed.
 
-The Solution (that nobody asked for)
+The Solution (that nobody asked for):
+
 Buy making it a fun website.
 
-Technical Details
+Technical Details:
+
 Technologies/Components Used
 For Software:Tech Stack
 Frontend:
@@ -42,7 +46,16 @@ For Hardware: None
 For Software:
 
 Installation
-[commands]
+
+# 1. Clone the repository
+git clone https://github.com/angelgylson/Sundhari.git
+
+# 2. Navigate into the project folder
+cd Sundhari
+
+# 3. Install dependencies
+npm install
+
 
 Run
 [commands]
